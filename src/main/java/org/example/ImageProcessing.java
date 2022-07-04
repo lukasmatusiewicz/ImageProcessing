@@ -35,9 +35,20 @@ public class ImageProcessing
 
         // Painting with pixels
         int[][] blank = new int[500][500];
-        twoDToImage(paintRandomImage(blank), "target/img-result/paintRandom.jpg");
 
-        
+        // paint the random image from colourful pixels
+        twoDToImage(paintRandomImage(blank), "target/img-result/paintRandom.jpg");
+        // paint rectangle on the blank page or on given image
+        int width = blank[0].length - 100;
+        int height = blank.length - (blank.length * 80 / 100);
+        int rowPosition = (blank.length / 2) - (height / 2);
+        int colPosition = (blank[0].length / 2) - (width / 2);
+        int[] rgba = {255, 0, 255, 255};
+        int color = getColorIntValFromRGBA(rgba);
+        twoDToImage(paintRectangle(blank, width, height, rowPosition, colPosition, color), "target/img-result/paintRectangle.jpg");
+
+        // paint art unsing rectangle generator
+        twoDToImage(generateRectangles(blank, 1000), "target/img-result/generateRectangles.jpg");
     }
 
     // Image Processing Methods
@@ -184,14 +195,39 @@ public class ImageProcessing
     public static int[][] paintRectangle(int[][] canvas, int width, int height, int rowPosition, int colPosition,
                                          int color)
     {
-        // TODO: Fill in the code for this method
-        return null;
+        for(int i = 0; i < canvas.length; i++)
+        {
+            for(int j = 0; j < canvas[i].length; j++)
+            {
+                if (i >= rowPosition && i <= rowPosition + height)
+                {
+                    if (j>= colPosition && j<= colPosition + width)
+                    {
+                        canvas[i][j] = color;
+                    }
+                }
+            }
+        }
+        return canvas;
     }
 
     public static int[][] generateRectangles(int[][] canvas, int numRectangles)
     {
-        // TODO: Fill in the code for this method
-        return null;
+        Random rand = new Random();
+        for (int i = 0; i < numRectangles; i++)
+        {
+                int randomWidth = rand.nextInt(canvas[0].length);
+                int randomHeight = rand.nextInt(canvas.length);
+
+                int randomRowPos = rand.nextInt(canvas.length - randomHeight);
+                int randomColPos = rand.nextInt(canvas[0].length - randomWidth);
+
+                int[] rgba = {rand.nextInt(256), rand.nextInt(256), rand.nextInt(256), 255};
+                int randomColor = getColorIntValFromRGBA(rgba);
+
+                paintRectangle(canvas, randomWidth, randomHeight, randomRowPos, randomColPos, randomColor);
+            }
+        return canvas;
     }
 
     // Utility Methods
