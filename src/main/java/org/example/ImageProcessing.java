@@ -29,6 +29,8 @@ public class ImageProcessing
         twoDToImage(shrinkVertically(imageData), "target/img-result/shrinked(vertically).jpg");
         // invert vertically the image
         twoDToImage(invertImage(imageData), "target/img-result/inverted(vertically).jpg");
+        // add the color filter onto the image
+        twoDToImage(colorFilter(imageData, -5, 30, -10), "target/img-result/color-filtered.jpg");
 
         // int[][] allFilters = stretchHorizontally(shrinkVertically(colorFilter(negativeColor(trimBorders(invertImage(imageData), 50)), 200, 20, 40)));
         // Painting with pixels
@@ -93,9 +95,9 @@ public class ImageProcessing
         {
             for (int j = 0; j < imageTwoD[i].length; j++)
             {
-                it = j*2;
+                it = j * 2;
                 modifiedImageData[i][it] = imageTwoD[i][j];
-                modifiedImageData[i][it+1] = imageTwoD[i][j];
+                modifiedImageData[i][it + 1] = imageTwoD[i][j];
             }
         }
 
@@ -104,13 +106,13 @@ public class ImageProcessing
 
     public static int[][] shrinkVertically(int[][] imageTwoD)
     {
-        int[][] modifiedImageData = new int[imageTwoD.length/2][imageTwoD[0].length];
+        int[][] modifiedImageData = new int[imageTwoD.length / 2][imageTwoD[0].length];
 
         for (int i = 0; i < imageTwoD[0].length; i++)
         {
-            for (int j = 0; j < imageTwoD.length-1; j+=2)
+            for (int j = 0; j < imageTwoD.length - 1; j += 2)
             {
-                modifiedImageData[j/2][i] = imageTwoD[j][i];
+                modifiedImageData[j / 2][i] = imageTwoD[j][i];
             }
         }
         return modifiedImageData;
@@ -120,11 +122,11 @@ public class ImageProcessing
     {
         int[][] modifiedImageData = new int[imageTwoD.length][imageTwoD[0].length];
 
-        for(int i = 0; i < imageTwoD.length; i++)
+        for (int i = 0; i < imageTwoD.length; i++)
         {
-            for(int j = 0; j < imageTwoD[i].length; j++)
+            for (int j = 0; j < imageTwoD[i].length; j++)
             {
-                modifiedImageData[i][j] = imageTwoD[(imageTwoD.length-1) -i][(imageTwoD[i].length-1)-j];
+                modifiedImageData[i][j] = imageTwoD[(imageTwoD.length - 1) - i][(imageTwoD[i].length - 1) - j];
             }
         }
         return modifiedImageData;
@@ -132,8 +134,28 @@ public class ImageProcessing
 
     public static int[][] colorFilter(int[][] imageTwoD, int redChangeValue, int greenChangeValue, int blueChangeValue)
     {
-        // TODO: Fill in the code for this method
-        return null;
+        int[][] modifiedImageData = new int[imageTwoD.length][imageTwoD[0].length];
+
+        for (int i = 0; i < imageTwoD.length; i++)
+        {
+            for (int j = 0; j < imageTwoD[i].length; j++)
+            {
+                int[] rgba = getRGBAFromPixel(imageTwoD[i][j]);
+
+                // Add the filter's values to each RGBA color
+                int newRed = rgba[0] + redChangeValue;
+                int newGreen = rgba[1] + greenChangeValue;
+                int newBlue = rgba[2] + blueChangeValue;
+
+                // Set new RGBA values
+                rgba[0] = adjustRGBToRange(newRed);
+                rgba[1] = adjustRGBToRange(newGreen);
+                rgba[2] = adjustRGBToRange(newBlue);
+
+                getColorIntValFromRGBA(rgba);
+            }
+        }
+        return modifiedImageData;
     }
 
     // Painting Methods
@@ -270,5 +292,24 @@ public class ImageProcessing
         {
             System.out.println("The image is not large enough to extract 9 pixels from the top left corner");
         }
+    }
+
+    /**
+     * Check if the given RGB value does not go outside of the range 0 to 255.
+     *
+     * @param rgbValue Value of Red, Green or Blue color
+     * @return RGB Value passed to the allowed range
+     */
+    public static int adjustRGBToRange(int rgbValue)
+    {
+        if (rgbValue < 0)
+        {
+            rgbValue = 0;
+        }
+        else if (rgbValue > 255)
+        {
+            rgbValue = 255;
+        }
+        return rgbValue;
     }
 }
