@@ -14,9 +14,6 @@ public class ImageProcessing
         // The provided images are apple.jpg, flower.jpg, and kitten.jpg
         int[][] imageData = imgToTwoD(
                 "https://images.unsplash.com/photo-1656477477824-1a4cfef063e7?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80");
-        // Or load your own image using a URL!
-        //int[][] imageData = imgToTwoD("https://content.codecademy.com/projects/project_thumbnails/phaser/bug-dodger.png");
-        //        viewImageData(imageData);
         assert imageData != null;
 
         // trimm the image
@@ -32,8 +29,10 @@ public class ImageProcessing
         // add the color filter onto the image
         twoDToImage(colorFilter(imageData, -5, 30, -10), "target/img-result/color-filtered.jpg");
 
-        // int[][] allFilters = stretchHorizontally(shrinkVertically(colorFilter(negativeColor(trimBorders(invertImage(imageData), 50)), 200, 20, 40)));
+        int[][] allFilters = stretchHorizontally(shrinkVertically(colorFilter(negativeColor(trimBorders(invertImage(imageData), imageData[0].length / 3)), -5, 30, -10)));
+        twoDToImage(allFilters, "target/img-result/allFilters.jpg");
         // Painting with pixels
+
     }
 
     // Image Processing Methods
@@ -152,7 +151,7 @@ public class ImageProcessing
                 rgba[1] = adjustRGBToRange(newGreen);
                 rgba[2] = adjustRGBToRange(newBlue);
 
-                getColorIntValFromRGBA(rgba);
+                modifiedImageData[i][j] = getColorIntValFromRGBA(rgba);
             }
         }
         return modifiedImageData;
