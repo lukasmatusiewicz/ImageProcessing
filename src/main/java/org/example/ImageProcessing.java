@@ -5,6 +5,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.net.URL;
 import java.util.Arrays;
+import java.util.Random;
 import javax.imageio.ImageIO;
 
 public class ImageProcessing
@@ -31,8 +32,12 @@ public class ImageProcessing
 
         int[][] allFilters = stretchHorizontally(shrinkVertically(colorFilter(negativeColor(trimBorders(invertImage(imageData), imageData[0].length / 3)), -5, 30, -10)));
         twoDToImage(allFilters, "target/img-result/allFilters.jpg");
-        // Painting with pixels
 
+        // Painting with pixels
+        int[][] blank = new int[500][500];
+        twoDToImage(paintRandomImage(blank), "target/img-result/paintRandom.jpg");
+
+        
     }
 
     // Image Processing Methods
@@ -160,8 +165,20 @@ public class ImageProcessing
     // Painting Methods
     public static int[][] paintRandomImage(int[][] canvas)
     {
-        // TODO: Fill in the code for this method
-        return null;
+        Random rand = new Random();
+        for(int i = 0; i < canvas.length; i++)
+        {
+            for(int j = 0; j < canvas[i].length; j++)
+            {
+                int randRed = rand.nextInt(256);
+                int randGreen = rand.nextInt(256);
+                int randBlue = rand.nextInt(256);
+
+                int[] rgbaValues = {randRed, randGreen, randBlue, 255};
+                canvas[i][j] = getColorIntValFromRGBA(rgbaValues);
+            }
+        }
+        return canvas;
     }
 
     public static int[][] paintRectangle(int[][] canvas, int width, int height, int rowPosition, int colPosition,
